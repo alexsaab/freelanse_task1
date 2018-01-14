@@ -50,7 +50,7 @@ class Move extends Command
         else
             $recipient = User::where('name', $this->argument('recipient'))->first();
 
-        $amount = (integer)$this->argument('amount'); // Пока оставил что можно переводить только целые числа
+        $amount = (float)$this->argument('amount'); // исправил на float - разделитель дробной части .
         $description = $this->argument('description') ?? '';
 
         if (!$sender)
