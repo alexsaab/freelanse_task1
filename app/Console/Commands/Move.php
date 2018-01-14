@@ -40,8 +40,15 @@ class Move extends Command
      */
     public function handle()
     {
-        $sender = User::where('name', $this->argument('sender'))->first();
-        $recipient = User::where('name', $this->argument('recipient'))->first();
+        if (is_int($this->argument('sender')))
+            $sender = User::find($this->argument('sender'));
+        else
+            $sender = User::where('name', $this->argument('sender'))->first();
+
+        if (is_int($this->argument('recipient')))
+            $recipient =User::find($this->argument('recipient'));
+        else
+            $recipient = User::where('name', $this->argument('recipient'))->first();
 
         $amount = (integer)$this->argument('amount'); // Пока оставил что можно переводить только целые числа
         $description = $this->argument('description') ?? '';
