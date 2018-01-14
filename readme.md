@@ -83,13 +83,57 @@ php artisan make:model Transaction --all
 9. Правим файл database/migrations/2018_01_14_042942_create_transactions_table.php
 это миграция для таблицы содержайщей информацию о транзакциях 
 
-10.Исправляем описания моделей, файлы: 
+10. Исправляем описания моделей, файлы: 
 
 Transaction.php
 User.php
 
+11. Делаем первоначальную вставку данных в таблицу так называемый сидр: 
 
+php artisan make:seeder UserSeeder 
+В самом классы UserSeeder пишем вставки данных о пользователях и балансе: 
+
+$user = new User(
+            [
+                'name'  => 'mike',
+                'email'     => 'mike@mydomain.ru',
+                'password'  => bcrypt('secret'),
+                'firstname' => 'Михаил',
+                'lastname'  => 'Петров',
+                'balance'   => 2000,
+                'role'      => 'client',
+            ]
+        );
+        $user->save();
+        $this->command->info('Пользователь mike создан');
+        
+        Вызываем класс UserSeeder в DatabaseSeeder.php - чтобы все могло хорошо запуститься командой 
+        
+        php artisan db:seed * 
+        
+        * Перед этой командой запускаем миграцию
+        
+        php artisan migrate 
+        
+ 12. Создаем команду для работы с переводом транзакций (класс Move) 
  
+       php artisan make:command Move --command=move
+       
+       В классе Move прописываем весь необходимый функционал для работы приложения. 
+       Не забываем, чтобы все заработало прописать в файле Console/Kernel.php вызов класса Move::class.
+
+##Как работать из консоли
+
+запускается это все командой типа 
+
+php artisan move serg mike 500 "Вторая попытка на чай"
+
+где php artisan - стартуем кoнсольку от Laravel 
+move - наша самописная комманда по трансферу денег между счетами пользователей,
+serg - имя отпправителя,
+mike - имя получателя,
+500 - сумма перевода,
+"Вторая попытка на чай" - описание транзакции
 
 ##Замечания по работе
 
